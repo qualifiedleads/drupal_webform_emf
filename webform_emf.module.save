@@ -1,0 +1,93 @@
+<?php
+
+function webform_emf_menu() {
+
+  $items = array();
+
+  //this is added for this current tutorial.
+  $items['webform_emf'] = array(
+    'title' => 'Webform emf',
+    'page callback' => 'webform_emf_test',
+	'access callback' => 'webform_emf_access',
+    'type' => MENU_CALLBACK
+  );//'access arguments' => array('access fb_win_app module'),
+}
+
+function webform_emf_init() {
+	//drupal_add_css(drupal_get_path('module', 'fb_win_app') .'/fb_win_app.css');
+}
+
+/**
+ * Access callback for node/%node/edit/stock.
+ */
+function webform_emf_access() {
+ return true;
+  //eturn uc_product_is_product($node) && node_access('update', $node) && user_access('administer product stock');
+}
+
+function webform_emf_test() {
+	print 'test';	
+}
+
+function webform_emf_webform_submission_insert($node, $submission) {
+	//drupal_set_message('Executing hook: webform_emf_webform_submission_insert');
+	//print("<pre>".print_r($node ,true)."</pre>");
+	//print("<pre>".print_r($submission ,true)."</pre>");
+	//emf_db_save_request
+	
+	$mail = $submission->data[3]['value'][0];
+	$field_values = array();
+	$field_values[2] = $submission->data[1]['value'][0];
+	$field_values[5] = $submission->data[2]['value'][0];
+ 
+	//print 'Problematic is:' . substr($submission->data[6]['value'][0],0,1);
+	if(substr($submission->data[6]['value'][0],0,1)=='<') 
+		$field_values[14] = $submission->data[4]['value'][0];
+	else
+		$field_values[14] = $submission->data[6]['value'][0];
+  
+  /*$lists = array();
+
+  if (is_array($form_state['values']['lists'])) {
+    $lists = array_keys(array_filter($form_state['values']['lists']));
+  }
+  else {
+    $lists[] = $form_state['values']['lists'];
+  }
+  print("<pre>".print_r($lists ,true)."</pre>");
+
+  foreach ($lists as $lid) {
+
+    // fetch list info
+    $list = emf_db_get_list($lid);
+
+    if (user_is_anonymous()) {
+      // anonymous user
+      $field_values = $form_state['values']['fields'];
+
+      $mail = $field_values['mail'];
+      unset($field_values['mail']);
+    }
+    else {
+      // registered user
+      $field_values = emf_helpers_parse_field_values($list->lid);
+
+      $mail = $field_values['mail'];
+
+      unset($field_values['mail']);
+    }
+*/
+    // subscribe user
+     drupal_set_message('Executing hook: webform_emf_webform_submission_insert');
+    print("<pre>".print_r($field_values ,true)."</pre>");
+    emf_helpers_subscribe($mail, 5, $field_values);
+
+    //drupal_set_message(t('You have now been subscribed to the mailing list !list', array('!list' => t($list->name_clean))));
+
+  //}
+	
+	
+	
+}
+
+?>

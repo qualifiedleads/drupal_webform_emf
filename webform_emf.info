@@ -1,0 +1,8 @@
+; $Id: webform_emf.info,v 1.0 2010/12/29 10:27:00 reggie Exp $
+
+name = Webform emf hook
+description = Integratedss webform with emf.
+core = 6.x
+version = "6.x-1.0"
+package = Webform
+project = "webform_emf"
